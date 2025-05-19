@@ -1,4 +1,4 @@
-package com.example.carbooking.Adapter;
+package com.example.carbooking.adapter;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.carbooking.CarDetailsActivity;
-import com.example.carbooking.Model.AppCar;
+import com.example.carbooking.model.AppCar;
 import com.example.carbooking.databinding.ItemCarsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
-    private List<AppCar> cars;
+    private final List<AppCar> cars;
     public CarAdapter(){
         cars = new ArrayList<>();
     }
