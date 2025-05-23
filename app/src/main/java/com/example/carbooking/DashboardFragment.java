@@ -37,7 +37,7 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+//        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
 
 //        // Initialize Adapter and set it to RecyclerView

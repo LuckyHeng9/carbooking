@@ -24,18 +24,18 @@
             app:cardElevation="6dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="397dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="Upload Car Image"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_horizontal"/>
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/car_image_preview"
@@ -43,18 +43,18 @@
                     android:layout_height="150dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
-                    android:scaleType="centerCrop"
                     android:background="@drawable/dash_border"
-                    android:contentDescription="Car image preview"/>
+                    android:contentDescription="Car image preview"
+                    android:scaleType="centerCrop" />
 
                 <Button
                     android:id="@+id/car_image_button"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload Image"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    android:text="Upload Image" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -91,25 +91,36 @@
                 <EditText
                     android:id="@+id/car_description_edittext"
                     style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="332dp"
+                    android:layout_height="74dp"
                     android:layout_marginTop="8dp"
+                    android:background="@drawable/border"
                     android:gravity="top|start"
                     android:hint="Car Description"
                     android:inputType="textMultiLine"
-                    android:background="@drawable/border"
                     android:minLines="3" />
 
                 <EditText
                     android:id="@+id/car_price_edittext"
                     style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="341dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/price"
-                    android:textColor="@color/baseColor"
-                    android:inputType="numberDecimal"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/border"
-                    android:layout_marginTop="8dp"/>
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/baseColor" />
+
+                <RadioButton
+                    android:id="@+id/carStatus"
+                    android:layout_width="104dp"
+                    android:layout_height="37dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Avalaible"
+                    android:textColor="@color/color1">
+
+                </RadioButton>
 
                 <Button
                     android:id="@+id/submit_button"

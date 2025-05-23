@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -59,10 +60,32 @@ public class CarFragment extends Fragment {
             startActivity(intent);
         });
 
+
+//        SearchView searchView = binding.searchViewCars;
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                adapter.getFilter().filter(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                adapter.getFilter().filter(newText);
+//                return false;
+//            }
+//        });
+
+
+
         enableSwipeActions();
+
+
 
         return binding.getRoot();
     }
+
+
 
     private void loadCars() {
         DatabaseReference carsRef = FirebaseDatabase.getInstance().getReference("cars");
