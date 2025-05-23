@@ -22,10 +22,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.carbooking.adapter.AdminCarAdapter;
-import com.example.carbooking.adapter.CarAdapter;
+import com.example.carbooking.Adapter.AdminCarAdapter;
 import com.example.carbooking.databinding.FragmentCarBinding;
-import com.example.carbooking.model.AppCar;
+import com.example.carbooking.Model.AppCar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,10 +58,32 @@ public class CarFragment extends Fragment {
             startActivity(intent);
         });
 
+
+//        SearchView searchView = binding.searchViewCars;
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                adapter.getFilter().filter(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                adapter.getFilter().filter(newText);
+//                return false;
+//            }
+//        });
+
+
+
         enableSwipeActions();
+
+
 
         return binding.getRoot();
     }
+
+
 
     private void loadCars() {
         DatabaseReference carsRef = FirebaseDatabase.getInstance().getReference("cars");

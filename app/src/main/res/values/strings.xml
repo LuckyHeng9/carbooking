@@ -28,4 +28,7 @@
     <string name="open_drawer" />
     <string name="close_drawer" />
     <string name="price">Price</string>
+    <string name="total_cars">Total Cars</string>
+    <string name="active_booking">Active Booking</string>
+    <string name="pending_approvals">Pending Approvals</string>
 </resources>

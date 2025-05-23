@@ -56,6 +56,9 @@ public class AdminActivity extends AppCompatActivity {
                 loadFragment(new DashboardFragment());
             } else if (id == R.id.nav_car) {
                 loadFragment(new CarFragment());
+            } else if (id == R.id.manage_user) {
+                loadFragment(new ManageUserFragment());
+
             }
             binding.drawerLayout.closeDrawers();
             return true;

@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.carbooking.model.AppCar;
-import com.example.carbooking.adapter.CarAdapter;
+
+import com.example.carbooking.Model.AppCar;
+import com.example.carbooking.Adapter.CarAdapter;
 import com.example.carbooking.databinding.FragmentDashboardBinding;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
@@ -37,7 +37,7 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+//        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
 
 //        // Initialize Adapter and set it to RecyclerView

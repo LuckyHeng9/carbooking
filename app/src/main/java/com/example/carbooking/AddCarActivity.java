@@ -17,7 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.carbooking.cloudinary.UploadImageToCloudinary;
 import com.example.carbooking.databinding.ActivityAddCarBinding;
-import com.example.carbooking.model.AppCar;
+import com.example.carbooking.Model.AppCar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -94,6 +94,7 @@ public class AddCarActivity extends AppCompatActivity {
         String name = binding.carNameEdittext.getText().toString().trim();
         String model = binding.carModelEdittext.getText().toString().trim();
         String price = binding.carPriceEdittext.getText().toString().trim();
+        Boolean statusText = binding.carStatus.isChecked();
         String description = binding.carDescriptionEdittext.getText().toString().trim();
 
         if (name.isEmpty() || model.isEmpty() || price.isEmpty() || description.isEmpty()) {
@@ -101,7 +102,7 @@ public class AddCarActivity extends AppCompatActivity {
             return;
         }
         String carId = UUID.randomUUID().toString();
-        AppCar car = new AppCar(carId, name, model, price, description, imageUrl);
+        AppCar car = new AppCar(carId, name, model, price, description, statusText ,imageUrl);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
 
 
