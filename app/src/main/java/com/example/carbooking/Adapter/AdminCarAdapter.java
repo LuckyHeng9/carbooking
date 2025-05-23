@@ -1,4 +1,4 @@
-package com.example.carbooking.adapter;
+package com.example.carbooking.Adapter;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import androidx.annotation.NonNull;
-import com.example.carbooking.model.AppCar;
+import com.example.carbooking.Model.AppCar;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.carbooking.R;

@@ -17,7 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.carbooking.cloudinary.UploadImageToCloudinary;
 import com.example.carbooking.databinding.ActivityAddCarBinding;
-import com.example.carbooking.model.AppCar;
+import com.example.carbooking.Model.AppCar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

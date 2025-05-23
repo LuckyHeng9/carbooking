@@ -1,6 +1,4 @@
-package com.example.carbooking.model;
-
-import java.util.function.BiConsumer;
+package com.example.carbooking.Model;
 
 public class AppCar {
     private String id;

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
-    private List<AppCar> cars;
+    private final List<AppCar> cars;
     public CarAdapter(){
         cars = new ArrayList<>();
     }
