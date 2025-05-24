@@ -31,4 +31,7 @@
     <string name="total_cars">Total Cars</string>
     <string name="active_booking">Active Booking</string>
     <string name="pending_approvals">Pending Approvals</string>
+    <string name="username">%1$s %2$s</string>
+    <string name="joined">Joined %1$s</string>
+    <string name="save">Save</string>
 </resources>
