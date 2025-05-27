@@ -9,7 +9,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carbooking.Fragment.ProfileFragment;
-import com.example.carbooking.Model.AppUser;
 
 
 import com.google.android.material.textfield.TextInputEditText;

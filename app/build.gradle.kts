@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+
 }
 
 android {
@@ -27,9 +28,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     buildFeatures {
         viewBinding = true
     }
@@ -88,8 +90,10 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
     // Glide image loading library
-    implementation(libs.glide)
-    annotationProcessor(libs.compiler)
+//    implementation(libs.glide)
+//    annotationProcessor(libs.compiler)
 
     implementation(libs.drawerlayout)
+    implementation(libs.play.services.maps)
+
 }

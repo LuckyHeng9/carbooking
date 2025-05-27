@@ -14,10 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import com.example.carbooking.Model.AppCar;
 import com.example.carbooking.cloudinary.UploadImageToCloudinary;
 import com.example.carbooking.databinding.ActivityAddCarBinding;
-import com.example.carbooking.Model.AppCar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -97,12 +96,13 @@ public class AddCarActivity extends AppCompatActivity {
         Boolean statusText = binding.carStatus.isChecked();
         String description = binding.carDescriptionEdittext.getText().toString().trim();
 
+
         if (name.isEmpty() || model.isEmpty() || price.isEmpty() || description.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
         String carId = UUID.randomUUID().toString();
-        AppCar car = new AppCar(carId, name, model, price, description, statusText ,imageUrl);
+        AppCar car = new AppCar(carId, name, model, price, statusText,description ,imageUrl);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
 
 

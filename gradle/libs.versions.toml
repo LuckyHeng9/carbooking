@@ -27,6 +27,7 @@ firebaseFirestore = "25.1.3"
 
 
 [libraries]
+play-services-maps = "com.google.android.gms:play-services-maps:18.2.0"
 cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
 cloudinary-android-download = { module = "com.cloudinary:cloudinary-android-download", version.ref = "cloudinaryAndroid" }
 cloudinary-android-preprocess = { module = "com.cloudinary:cloudinary-android-preprocess", version.ref = "cloudinaryAndroid" }

@@ -9,12 +9,16 @@ public class AppCar {
     private Boolean carstatus;
     private String image;
 
+   // private String image; // URL or path to image
 
 
     public  AppCar() {}
+    //public AppCar() {}
+
 
     // Full constructor
-    public  AppCar(String id, String name, String model, String price, String description, boolean carstatus , String image) {
+    //public  AppCar(String id, String name, String model, String price, String description, boolean carstatus , String image) {
+    public AppCar(String id, String name, String model, String price, boolean carstatus, String description,  String image) {
         this.id = id;
         this.name = name;
         this.model = model;
@@ -28,6 +32,7 @@ public class AppCar {
     public String getId() { return id; }
     public String getName() { return name; }
     public String getModel() { return model; }
+
     public String getPrice() { return price; }
     public Boolean getCarstatus(){return  carstatus;}
     public String getDescription() { return description; }
