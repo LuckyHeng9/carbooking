@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
                             String userName = getString(R.string.username,firstName,lastName);
                             tvUserName.setText(userName);
                         } else {
-                            Log.w("Login", "User data not found.");
+                            Log.w("Profile", "User data not found.");
                         }
                     })
                     .addOnFailureListener(e -> {

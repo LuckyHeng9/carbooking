@@ -1,66 +1,118 @@
 package com.example.carbooking.Fragment;
 
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.carbooking.Adapter.CarAdapter;
+import com.example.carbooking.Model.AppCar;
 import com.example.carbooking.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoriteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class FavoriteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private CarAdapter carAdapter;
+    private List<AppCar> carList;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private boolean isLoading = false;
 
-    public FavoriteFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoriteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoriteFragment newInstance(String param1, String param2) {
-        FavoriteFragment fragment = new FavoriteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+
+        recyclerView = view.findViewById(R.id.rv_favorites);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        List<AppCar> carList = new ArrayList<>();
+
+        carAdapter = new CarAdapter(); // No-argument constructor
+        carAdapter.setCars(carList);
+        recyclerView.setAdapter(carAdapter);
+
+        loadFavoriteCars();
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false);
+
+    private void loadFavoriteCars() {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .collection("favoriteCar")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<String> favoriteCarIds = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String carId = doc.getString("carId");
+                        if (carId != null) {
+                            favoriteCarIds.add(carId);
+                        }
+                    }
+
+                    if (!favoriteCarIds.isEmpty()) {
+                        loadCarsByIds(favoriteCarIds);
+                    } else {
+                        carAdapter.setCars(new ArrayList<>()); // Clear list
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to load favorites", Toast.LENGTH_SHORT).show();
+                });
     }
+    private void loadCarsByIds(List<String> carIds) {
+        DatabaseReference carRef = FirebaseDatabase.getInstance().getReference("cars");
+
+        carRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<AppCar> favoriteCars = new ArrayList<>();
+                for (DataSnapshot carSnap : snapshot.getChildren()) {
+                    AppCar car = carSnap.getValue(AppCar.class);
+                    if (car != null && carIds.contains(car.getId())) {
+                        favoriteCars.add(car);
+                    }
+                }
+                carAdapter.setCars(favoriteCars);
+                Log.d("FavoriteFragment", "Found " + snapshot + " favorites.");
+                Log.d("FavoriteFragment", "Checking car ID: " + carIds);
+
+
+            }
+
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load car data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
 }

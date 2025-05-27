@@ -21,4 +21,7 @@
     <color name="dark_light">#161E24</color>
     <color name="gray">#374151</color>
 
+    <color name="primary_blue">#10377B</color>
+    <color name="light_gray">#D6D6D6</color>
+
 </resources>
