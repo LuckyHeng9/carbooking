@@ -58,32 +58,10 @@ public class CarFragment extends Fragment {
             startActivity(intent);
         });
 
-
-//        SearchView searchView = binding.searchViewCars;
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                adapter.getFilter().filter(query);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                adapter.getFilter().filter(newText);
-//                return false;
-//            }
-//        });
-
-
-
         enableSwipeActions();
-
-
 
         return binding.getRoot();
     }
-
-
 
     private void loadCars() {
         DatabaseReference carsRef = FirebaseDatabase.getInstance().getReference("cars");
@@ -112,20 +90,22 @@ public class CarFragment extends Fragment {
     private void enableSwipeActions() {
         ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                AppCar car = carList.get(position);  // Use AppCar instead of Car
+                AppCar car = carList.get(position);
 
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Delete Car")
                         .setMessage("Are you sure you want to delete this car?")
                         .setPositiveButton("Yes", (dialog, which) -> {
-                            deleteCar(car);  // Use AppCar instead of Car
+                            deleteCar(car);
                             carList.remove(position);
                             adapter.notifyItemRemoved(position);
                         })
@@ -136,19 +116,18 @@ public class CarFragment extends Fragment {
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
-                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
+                                    @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
                 Paint paint = new Paint();
 
-                if (dX < 0) { // Swiping to the left
-                    // Draw red background
-                    paint.setColor(Color.parseColor("#F44336")); // Red
-                    RectF background = new RectF(itemView.getRight() + dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                if (dX < 0) { // Swiping left
+                    paint.setColor(Color.parseColor("#F44336")); // red
+                    RectF background = new RectF(itemView.getRight() + dX, itemView.getTop(),
+                            itemView.getRight(), itemView.getBottom());
                     c.drawRect(background, paint);
 
-                    // Draw delete icon
-                    Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.delete); // Make sure this icon exists
+                    Drawable icon = ContextCompat.getDrawable(requireContext(), R.drawable.delete);
                     if (icon != null) {
                         int iconMargin = (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
                         int iconTop = itemView.getTop() + iconMargin;
@@ -188,13 +167,21 @@ public class CarFragment extends Fragment {
 
         modelEdit.setText(car.getModel());
         descEdit.setText(car.getDescription());
-        priceEdit.setText(car.getPrice());
+        priceEdit.setText(String.valueOf(car.getPrice()));  // Important to convert double to string here
 
         builder.setTitle("Edit Car")
                 .setPositiveButton("Update", (dialog, which) -> {
                     car.setModel(modelEdit.getText().toString());
                     car.setDescription(descEdit.getText().toString());
-                    car.setPrice(priceEdit.getText().toString());
+
+                    try {
+                        double newPrice = Double.parseDouble(priceEdit.getText().toString());
+                        car.setPrice(newPrice);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Invalid price format", Toast.LENGTH_SHORT).show();
+                        adapter.notifyItemChanged(position);
+                        return;
+                    }
 
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
                     ref.child(car.getId()).setValue(car)

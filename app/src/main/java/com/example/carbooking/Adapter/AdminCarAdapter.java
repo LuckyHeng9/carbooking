@@ -12,11 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.carbooking.R;
 import com.example.carbooking.databinding.AdminCarItemsBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarViewHolder> implements Filterable {
+public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarViewHolder> {
 
     public interface OnCarActionListener {
         void onEdit(AppCar car, int position);
@@ -44,46 +45,48 @@ public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarVie
     public void onBindViewHolder(@NonNull CarViewHolder holder, int position) {
         AppCar car = carList.get(position);
 
-        // Load car image with placeholder and error fallback
+
+
         Glide.with(holder.itemView.getContext())
                 .load(car.getImage())
                 .into(holder.binding.carImage);
 
         holder.binding.carModel.setText(car.getModel());
-        holder.binding.carPrice.setText( "$"+ car.getPrice()+ "/day");
+        holder.binding.carPrice.setText("$" + car.getPrice() + "/day");
 
-        if(car.getCarstatus() != null && car.getCarstatus()){
+        // Show availability based on boolean 'available' field, NOT on status
+        if (car.getAvailable() != null && car.getAvailable()) {
             holder.binding.carStatus.setText("Available");
-            holder.binding.carStatus.setTextColor(Color.parseColor("#4CAF50"));
-
-        }else {
+            holder.binding.carStatus.setTextColor(Color.parseColor("#4CAF50")); // Green
+        } else {
             holder.binding.carStatus.setText("Rented");
-            holder.binding.carStatus.setTextColor(Color.parseColor("#90A4AE"));
+            holder.binding.carStatus.setTextColor(Color.parseColor("#90A4AE")); // Grayish
         }
-
-//        holder.binding.carDescription.setText(car.getDescription());
 
         Log.d("CarAdapter", "Model: " + car.getModel());
         Log.d("CarAdapter", "Price: " + car.getPrice() + "/day");
         Log.d("CarAdapter", "Image: " + car.getImage());
 
-        // Dot icon click -> edit action
+        // Edit button click
         holder.editButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEdit(car, holder.getAdapterPosition());
             }
         });
 
-//        // Delete icon click -> delete action (if you have one)
-//        holder.deleteButton.setOnClickListener(v -> {
-//            if (listener != null) {
-//                listener.onDelete(car, holder.getAdapterPosition());
-//            }
-//        });
-
-
-
     }
+
+
+    private void updateCarAvailability(String carId, boolean isAvailable) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("cars") // your collection name
+                .document(carId)
+                .update("available", isAvailable)  // update the correct field name
+                .addOnSuccessListener(aVoid -> Log.d("AdminCarAdapter", "Car availability updated"))
+                .addOnFailureListener(e -> Log.e("AdminCarAdapter", "Failed to update car availability", e));
+    }
+
+
 
     @Override
     public int getItemCount() {
@@ -112,35 +115,35 @@ public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarVie
 
 
 
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                List<AppCar> filtered = new ArrayList<>();
-                if (constraint == null || constraint.length() == 0) {
-                    filtered.addAll(allCars);
-                } else {
-                    String query = constraint.toString().toLowerCase().trim();
-                    for (AppCar car : allCars) {
-                        if (car.getName().toLowerCase().contains(query) ||
-                                car.getModel().toLowerCase().contains(query)) {
-                            filtered.add(car);
-                        }
-                    }
-                }
-                FilterResults results = new FilterResults();
-                results.values = filtered;
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                carList.clear();
-                carList.addAll((List<AppCar>) results.values);
-                notifyDataSetChanged();
-            }
-        };
-    }
+//    public Filter getFilter() {
+//        return new Filter() {
+//            @Override
+//            protected FilterResults performFiltering(CharSequence constraint) {
+//                List<AppCar> filtered = new ArrayList<>();
+//                if (constraint == null || constraint.length() == 0) {
+//                    filtered.addAll(allCars);
+//                } else {
+//                    String query = constraint.toString().toLowerCase().trim();
+//                    for (AppCar car : allCars) {
+//                        if (car.getName().toLowerCase().contains(query) ||
+//                                car.getModel().toLowerCase().contains(query)) {
+//                            filtered.add(car);
+//                        }
+//                    }
+//                }
+//                FilterResults results = new FilterResults();
+//                results.values = filtered;
+//                return results;
+//            }
+//
+//            @Override
+//            protected void publishResults(CharSequence constraint, FilterResults results) {
+//                carList.clear();
+//                carList.addAll((List<AppCar>) results.values);
+//                notifyDataSetChanged();
+//            }
+//        };
+//    }
 
 
 

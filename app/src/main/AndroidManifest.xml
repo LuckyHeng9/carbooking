@@ -19,6 +19,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+<!--        <activity-->
+<!--            android:name=".MyApp"-->
+<!--            android:exported="false"/>-->
+
         <activity
             android:name=".UserAccountSetting"
             android:exported="false" />
@@ -45,6 +49,17 @@
         <activity
             android:name=".Login"
             android:exported="false" />
+
+        <activity
+            android:name=".CarDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BookingStatusActivity"
+            android:exported="false" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false">
@@ -59,6 +74,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
 
         <meta-data
             android:name="CLOUDINARY_URL"

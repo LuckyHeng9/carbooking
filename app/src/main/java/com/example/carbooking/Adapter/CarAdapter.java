@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.example.carbooking.CarDetailsActivity;
 import com.example.carbooking.Model.AppCar;
 import com.example.carbooking.R;
 import com.example.carbooking.databinding.ItemCarsBinding;
+import com.example.carbooking.databinding.ItemRentalHistoryBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
@@ -51,10 +53,15 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+
         ItemCarsBinding binding = ItemCarsBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false);
+
+        ItemRentalHistoryBinding rentalHistoryBinding = ItemRentalHistoryBinding.inflate(
+                LayoutInflater.from(parent.getContext()),
+                parent, false);
         return new CarViewHolder(binding);
     }
 
@@ -67,7 +74,9 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
                 .into(holder.binding.ivCar);
 
         holder.binding.tvCarName.setText(car.getName());
-        holder.binding.tvCarPrice.setText(car.getPrice());
+        holder.binding.tvCarPrice.setText(String.valueOf(car.getPrice()));
+
+
 
 
 
@@ -98,7 +107,17 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
             intent.putExtra("carId", car.getId()); // Pass only the ID
             holder.itemView.getContext().startActivity(intent);
         });
+
+
+        holder.binding.btnRent.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), CarDetailsActivity.class);
+            intent.putExtra("carId", car.getId());
+            holder.itemView.getContext().startActivity(intent);
+            Log.d("showCar", car.getId());
+        });
+
     }
+
 
 
     private void StoreFavoriteCar(Context context, String uid, String carId) {

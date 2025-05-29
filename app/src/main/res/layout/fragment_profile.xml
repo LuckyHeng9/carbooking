@@ -75,75 +75,13 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <HorizontalScrollView
+            <!-- RecyclerView for dynamic rental history -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRentalHistory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Car 1 -->
-                    <LinearLayout
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/card_bg"
-                        android:orientation="vertical"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:src="@drawable/car" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="8dp"
-                            android:text="BENZ RGUNDER"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="21 Feb, 2024"
-                            android:textColor="#666"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <!-- Car 2 -->
-                    <LinearLayout
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_bg"
-                        android:orientation="vertical"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:src="@drawable/car" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="8dp"
-                            android:text="AUDI R1B"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10 Feb, 2024"
-                            android:textColor="#666"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </HorizontalScrollView>
+                android:layout_height="200dp"
+                android:clipToPadding="false"
+                android:scrollbars="horizontal" />
 
             <!-- Profile Settings -->
             <TextView
