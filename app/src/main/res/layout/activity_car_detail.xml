@@ -1,9 +1,10 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".CarDetailsActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -73,6 +74,7 @@
 
                 <!-- Price and Button -->
                 <TextView
+                    android:id="@+id/carPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$18.75 / 1hr"
@@ -133,6 +135,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/car_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -169,6 +172,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Kuruma"

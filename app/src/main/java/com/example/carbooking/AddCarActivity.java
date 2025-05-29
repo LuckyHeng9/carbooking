@@ -14,9 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.example.carbooking.Model.AppCar;
+
 import com.example.carbooking.cloudinary.UploadImageToCloudinary;
 import com.example.carbooking.databinding.ActivityAddCarBinding;
+import com.example.carbooking.Model.AppCar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -45,6 +46,11 @@ public class AddCarActivity extends AppCompatActivity {
 
         // Open image picker
         binding.carImageButton.setOnClickListener(v -> openFileChooser());
+
+        binding.btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CarFragment.class);
+            startActivity(intent);
+        });
 
         // Submit form
         binding.submitButton.setOnClickListener(v -> {
@@ -92,23 +98,33 @@ public class AddCarActivity extends AppCompatActivity {
     private void addCarToFirebase(String imageUrl) {
         String name = binding.carNameEdittext.getText().toString().trim();
         String model = binding.carModelEdittext.getText().toString().trim();
-        String price = binding.carPriceEdittext.getText().toString().trim();
-        Boolean statusText = binding.carStatus.isChecked();
         String description = binding.carDescriptionEdittext.getText().toString().trim();
 
-
-        if (name.isEmpty() || model.isEmpty() || price.isEmpty() || description.isEmpty()) {
+        String priceText = binding.carPriceEdittext.getText().toString().trim();
+        if (name.isEmpty() || model.isEmpty() || description.isEmpty() || priceText.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        double price = Double.parseDouble(priceText);
         String carId = UUID.randomUUID().toString();
-        AppCar car = new AppCar(carId, name, model, price, statusText,description ,imageUrl);
+
+        // Create AppCar with default availability and null carstatus
+        AppCar car = new AppCar(
+                carId,
+                name,
+                model,
+                price,
+                description,
+                null,          // carstatus (null = pending / not rented yet)
+                true,          // available = true by default
+                imageUrl
+        );
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
-
-
         ref.child(carId).setValue(car).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                binding.carImagePreview.setImageResource(R.drawable.dash_border); // reset to placeholder
+                binding.carImagePreview.setImageResource(R.drawable.dash_border);
                 binding.carNameEdittext.setText("");
                 binding.carModelEdittext.setText("");
                 binding.carDescriptionEdittext.setText("");
@@ -119,4 +135,5 @@ public class AddCarActivity extends AppCompatActivity {
             }
         });
     }
+
 }

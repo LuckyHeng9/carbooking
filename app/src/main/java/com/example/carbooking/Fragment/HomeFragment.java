@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
         loadTasks(true);
     }
 
-    private void loadTasks(boolean reset)  {
+    private void loadTasks(boolean reset) {
         isLoading = true;
         showProgressBar();
         DatabaseReference carRef = FirebaseDatabase.getInstance().getReference("cars");
@@ -95,7 +95,9 @@ public class HomeFragment extends Fragment {
                 List<AppCar> carList = new ArrayList<>();
                 for (DataSnapshot carSnap : snapshot.getChildren()) {
                     AppCar car = carSnap.getValue(AppCar.class);
-                    if (car != null) {
+
+                    // Only add cars that are marked as available
+                    if (car != null && Boolean.TRUE.equals(car.getAvailable())) {
                         carList.add(car);
                     }
                 }
@@ -109,7 +111,7 @@ public class HomeFragment extends Fragment {
                             uniqueCars.add(car);
                         }
                     }
-                    carAdapter.addCars(uniqueCars); // Only append new unique cars
+                    carAdapter.addCars(uniqueCars);
                 }
 
                 hideProgressBar();
@@ -124,6 +126,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 
     private void showProgressBar() {
         binding.carsProgressBar.setVisibility(View.VISIBLE);
