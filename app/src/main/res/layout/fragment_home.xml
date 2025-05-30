@@ -20,4 +20,15 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/tvNotFound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/car_was_not_found"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"/>
+
 </FrameLayout>

@@ -27,6 +27,9 @@
             android:name=".UserAccountSetting"
             android:exported="false" />
         <activity
+            android:name=".CarDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -52,7 +53,23 @@ public class CarFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         loadCars();
+        binding.searchViewCars.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                if (adapter.isListEmpty()) {
+                    binding.tvNoResult.setVisibility(View.VISIBLE);
+                } else {
+                    binding.tvNoResult.setVisibility(View.GONE);
+                }
+                return true;
+            }
+        });
         binding.addCarButton.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), AddCarActivity.class);
             startActivity(intent);
@@ -77,6 +94,7 @@ public class CarFragment extends Fragment {
                         Log.d("CarFragment", "Loaded " + car.getName());
                     }
                 }
+                adapter.updateCarList(carList);
                 adapter.notifyDataSetChanged();
             }
 

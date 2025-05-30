@@ -126,6 +126,18 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    public void filterCars(String query) {
+        if (carAdapter != null) {
+            carAdapter.filter(query);
+
+            if (carAdapter.getItemCount() == 0) {
+                binding.tvNotFound.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvNotFound.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
 
     private void showProgressBar() {

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarViewHolder> {
-
     public interface OnCarActionListener {
         void onEdit(AppCar car, int position);
     }
@@ -28,7 +27,7 @@ public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarVie
     private OnCarActionListener listener;
 
     public AdminCarAdapter(List<AppCar> carList, OnCarActionListener listener) {
-        this.carList = carList;
+        this.carList = new ArrayList<>(carList);
         this.listener = listener;
         this.allCars = new ArrayList<>(carList);
 
@@ -110,6 +109,66 @@ public class AdminCarAdapter extends RecyclerView.Adapter<AdminCarAdapter.CarVie
             this.binding = binding;
             editButton = itemView.findViewById(R.id.dot);
         }
+    }
+    public boolean isListEmpty() {
+        return carList.isEmpty();
+    }
+
+    public void filter(String query) {
+        Log.d("CarFilter", "=== FILTER START ===");
+        Log.d("CarFilter", "Query: '" + query + "'");
+        Log.d("CarFilter", "allCars size: " + (allCars != null ? allCars.size() : "NULL"));
+
+        List<AppCar> filteredList = new ArrayList<>();
+
+        if (query == null || query.trim().isEmpty()) {
+            // When search is cleared, restore all cars
+            if (allCars != null) {
+                filteredList.addAll(allCars);
+                Log.d("CarFilter", "Empty query - restoring all cars: " + filteredList.size());
+            }
+        } else {
+            String filterPattern = query.toLowerCase().trim();
+            Log.d("CarFilter", "Searching for: '" + filterPattern + "'");
+
+            if (allCars != null) {
+                for (AppCar car : allCars) {
+                    // Try both name and model to see which one works
+                    String carName = car.getName();
+                    String carModel = car.getModel();
+
+                    Log.d("CarFilter", "Car - Name: '" + carName + "', Model: '" + carModel + "'");
+
+                    boolean matchFound = false;
+
+                    // Check name first
+                    if (carName != null && carName.toLowerCase().contains(filterPattern)) {
+                        matchFound = true;
+                        Log.d("CarFilter", "MATCH by name: " + carName);
+                    }
+                    // If no name match, check model
+                    else if (carModel != null && carModel.toLowerCase().contains(filterPattern)) {
+                        matchFound = true;
+                        Log.d("CarFilter", "MATCH by model: " + carModel);
+                    }
+
+                    if (matchFound) {
+                        filteredList.add(car);
+                    }
+                }
+            }
+
+            Log.d("CarFilter", "Total matches found: " + filteredList.size());
+        }
+
+        // Update the list
+        carList.clear();
+        carList.addAll(filteredList);
+
+        Log.d("CarFilter", "Final carList size: " + carList.size());
+        Log.d("CarFilter", "=== FILTER END ===");
+
+        notifyDataSetChanged();
     }
 
 

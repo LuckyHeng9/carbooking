@@ -35,16 +35,19 @@ import java.util.Map;
 
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
     private final List<AppCar> cars;
+    private final List<AppCar> filteredCars;
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private FirebaseUser user;
     public CarAdapter() {
         this.cars = new ArrayList<>();
+        this.filteredCars = new ArrayList<>();
     }
     private boolean isFavorite = false;
     // Optional: Constructor with a list
     public CarAdapter(List<AppCar> carList) {
         this.cars = new ArrayList<>(carList);
+        this.filteredCars = new ArrayList<>(carList);
     }
     @NonNull
     @Override
@@ -67,7 +70,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CarAdapter.CarViewHolder holder, int position) {
-        AppCar car = cars.get(position);
+        AppCar car = filteredCars.get(position);
         Glide.with(holder.itemView.getContext())
                 .load(car.getImage())
                 .centerCrop()
@@ -75,7 +78,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
         holder.binding.tvCarName.setText(car.getName());
         holder.binding.tvCarPrice.setText(String.valueOf("$"+car.getPrice()+"/day"));
-        holder.binding.tvDiscount.setText(String.valueOf("Discount price "+ "$"+car.getDiscount()));
+//        holder.binding.tvDiscount.setText(String.valueOf("Discount price "+ "$"+car.getDiscount()));
 
 
 
@@ -145,19 +148,36 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
     @Override
     public int getItemCount() {
-        return cars.size();
+        return filteredCars.size();
     }
     // allow user to initialize the cars
-    public void setCars(List<AppCar> newExpense) {
+    public void setCars(List<AppCar> newCars) {
         cars.clear();
-        cars.addAll(newExpense);
+        cars.addAll(newCars);
+        filteredCars.clear();
+        filteredCars.addAll(newCars);
         notifyDataSetChanged();
     }
+    public void filter(String query) {
+        filteredCars.clear();
+        if (query.isEmpty()) {
+            filteredCars.addAll(cars);
+        } else {
+            for (AppCar car : cars) {
+                if (car.getName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredCars.add(car);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     // allow user to append new cars when receiving new car from real time database of firebase
     public void addCars(List<AppCar> newCar) {
         int startPosition = cars.size();
         cars.addAll(newCar);
+        filteredCars.addAll(newCar);
         notifyItemRangeInserted(startPosition, newCar.size());
     }
 

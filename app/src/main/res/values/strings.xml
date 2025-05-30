@@ -35,4 +35,5 @@
     <string name="joined">Joined %1$s</string>
     <string name="save">Save</string>
     <string name="google_maps_key">AIzaSyDlsdNMwQThO8i4uVM24H_OsytvE6CJYvY</string>
+    <string name="car_was_not_found">Car was not found</string>
 </resources>
