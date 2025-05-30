@@ -99,27 +99,28 @@ public class AddCarActivity extends AppCompatActivity {
         String name = binding.carNameEdittext.getText().toString().trim();
         String model = binding.carModelEdittext.getText().toString().trim();
         String description = binding.carDescriptionEdittext.getText().toString().trim();
-
         String priceText = binding.carPriceEdittext.getText().toString().trim();
+
         if (name.isEmpty() || model.isEmpty() || description.isEmpty() || priceText.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
         double price = Double.parseDouble(priceText);
+        double discount = 0.0; // Or parse from a field if you have a discount input
+
         String carId = UUID.randomUUID().toString();
 
-        // Create AppCar with default availability and null carstatus
         AppCar car = new AppCar(
                 carId,
                 name,
                 model,
                 price,
-                00,
+                discount,
                 description,
-                null,          // carstatus (null = pending / not rented yet)
-                true,          // available = true by default
-                imageUrl
+                null,     // carstatus: null means "Pending"
+                true,     // available
+                imageUrl  // image
         );
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");

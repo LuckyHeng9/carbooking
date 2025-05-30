@@ -1,156 +1,143 @@
 package com.example.carbooking.Adapter;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 
 import com.bumptech.glide.Glide;
 import com.example.carbooking.CarDetailsActivity;
 import com.example.carbooking.Model.AppCar;
-import com.example.carbooking.R;
 import com.example.carbooking.databinding.ItemCarsBinding;
-import com.example.carbooking.databinding.ItemRentalHistoryBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
     private final List<AppCar> cars;
+    private final Set<String> favoriteCarIds;
     private final List<AppCar> filteredCars;
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private FirebaseUser user;
+
     public CarAdapter() {
         this.cars = new ArrayList<>();
+        this.favoriteCarIds = new HashSet<>();
         this.filteredCars = new ArrayList<>();
     }
-    private boolean isFavorite = false;
-    // Optional: Constructor with a list
+
     public CarAdapter(List<AppCar> carList) {
         this.cars = new ArrayList<>(carList);
+        this.favoriteCarIds = new HashSet<>();
         this.filteredCars = new ArrayList<>(carList);
     }
+
+    public void setFavoriteCarIds(Set<String> favoriteCarIds) {
+        this.favoriteCarIds.clear();
+        this.favoriteCarIds.addAll(favoriteCarIds);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public CarAdapter.CarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-
         ItemCarsBinding binding = ItemCarsBinding.inflate(
-                LayoutInflater.from(parent.getContext()),
-                parent,
-                false);
-
-        ItemRentalHistoryBinding rentalHistoryBinding = ItemRentalHistoryBinding.inflate(
-                LayoutInflater.from(parent.getContext()),
-                parent, false);
+                LayoutInflater.from(parent.getContext()), parent, false);
         return new CarViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CarAdapter.CarViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CarViewHolder holder, int position) {
         AppCar car = filteredCars.get(position);
+
         Glide.with(holder.itemView.getContext())
                 .load(car.getImage())
                 .centerCrop()
                 .into(holder.binding.ivCar);
 
         holder.binding.tvCarName.setText(car.getName());
-        holder.binding.tvCarPrice.setText(String.valueOf("$"+car.getPrice()+"/day"));
-//        holder.binding.tvDiscount.setText(String.valueOf("Discount price "+ "$"+car.getDiscount()));
+        holder.binding.tvCarPrice.setText(String.format("$%s/day", car.getPrice()));
 
+        boolean isFavorite = favoriteCarIds.contains(car.getId());
+        holder.binding.btnFavorite.setColorFilter(isFavorite ? Color.RED : Color.BLACK);
 
-
-
-
-
-        String carId = car.getId();
-        // Handle click to toggle favorite
         holder.binding.btnFavorite.setOnClickListener(v -> {
-//            holder.binding.btnFavorite.setImageResource(R.drawable.ic_favorite_filled);
-            Toast.makeText(
-                    v.getContext(),                          // context from the clicked view
-                    "Added to favorites",                    // message
-                    Toast.LENGTH_SHORT                       // duration
-            ).show();
-            holder.binding.btnFavorite.setColorFilter(Color.parseColor("#FF0000"));
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                isFavorite = true;
-                StoreFavoriteCar(holder.itemView.getContext(), user.getUid(), car.getId());
-            } else {
+            if (user == null) {
                 Toast.makeText(holder.itemView.getContext(), "Please log in", Toast.LENGTH_SHORT).show();
+                return;
             }
 
+            if (isFavorite) {
+                removeFavoriteCar(holder.itemView.getContext(), user.getUid(), car.getId());
+                favoriteCarIds.remove(car.getId());
+                holder.binding.btnFavorite.setColorFilter(Color.BLACK);
+            } else {
+                addFavoriteCar(holder.itemView.getContext(), user.getUid(), car.getId());
+                favoriteCarIds.add(car.getId());
+                holder.binding.btnFavorite.setColorFilter(Color.RED);
+            }
         });
 
-        // Navigate to DetailExpenseActivity and pass only the expense ID
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), CarDetailsActivity.class);
-            intent.putExtra("carId", car.getId()); // Pass only the ID
+            intent.putExtra("carId", car.getId());
             holder.itemView.getContext().startActivity(intent);
         });
-
 
         holder.binding.btnRent.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), CarDetailsActivity.class);
             intent.putExtra("carId", car.getId());
             holder.itemView.getContext().startActivity(intent);
-            Log.d("showCar", car.getId());
         });
-
     }
 
+    private void addFavoriteCar(Context context, String uid, String carId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("carId", carId);
+        data.put("timestamp", FieldValue.serverTimestamp());
 
-
-    private void StoreFavoriteCar(Context context, String uid, String carId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        Map<String, Object> favoriteData = new HashMap<>();
-        favoriteData.put("carId", carId);
-        favoriteData.put("timestamp", FieldValue.serverTimestamp());
-
-        db.collection("users")
-                .document(uid)
-                .collection("favoriteCar")
-                .document(carId)
-                .set(favoriteData)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show();
-                    // Optionally update UI here
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Failed to add favorite", Toast.LENGTH_SHORT).show();
-                });
+        db.collection("users").document(uid)
+                .collection("favoriteCar").document(carId)
+                .set(data)
+                .addOnSuccessListener(unused ->
+                        Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(context, "Failed to add", Toast.LENGTH_SHORT).show());
     }
 
+    private void removeFavoriteCar(Context context, String uid, String carId) {
+        db.collection("users").document(uid)
+                .collection("favoriteCar").document(carId)
+                .delete()
+                .addOnSuccessListener(unused ->
+                        Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(context, "Failed to remove", Toast.LENGTH_SHORT).show());
+    }
 
     @Override
     public int getItemCount() {
         return filteredCars.size();
     }
-    // allow user to initialize the cars
+
     public void setCars(List<AppCar> newCars) {
         cars.clear();
         cars.addAll(newCars);
@@ -158,6 +145,14 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         filteredCars.addAll(newCars);
         notifyDataSetChanged();
     }
+
+    public void addCars(List<AppCar> newCars) {
+        int start = cars.size();
+        cars.addAll(newCars);
+        filteredCars.addAll(newCars);
+        notifyItemRangeInserted(start, newCars.size());
+    }
+
     public void filter(String query) {
         filteredCars.clear();
         if (query.isEmpty()) {
@@ -172,30 +167,19 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         notifyDataSetChanged();
     }
 
-
-    // allow user to append new cars when receiving new car from real time database of firebase
-    public void addCars(List<AppCar> newCar) {
-        int startPosition = cars.size();
-        cars.addAll(newCar);
-        filteredCars.addAll(newCar);
-        notifyItemRangeInserted(startPosition, newCar.size());
-    }
-
-    public class CarViewHolder extends RecyclerView.ViewHolder{
-        private ItemCarsBinding binding;
-        public CarViewHolder(@NonNull ItemCarsBinding binding) {
-            super(binding.getRoot());
-
-            this.binding = binding;
-        }
-    }
     public boolean containsCarId(String carId) {
         for (AppCar car : cars) {
-            if (car.getId().equals(carId)) {
-                return true;
-            }
+            if (car.getId().equals(carId)) return true;
         }
         return false;
     }
 
+    public static class CarViewHolder extends RecyclerView.ViewHolder {
+        ItemCarsBinding binding;
+
+        public CarViewHolder(@NonNull ItemCarsBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
 }
