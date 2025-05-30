@@ -74,7 +74,8 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
                 .into(holder.binding.ivCar);
 
         holder.binding.tvCarName.setText(car.getName());
-        holder.binding.tvCarPrice.setText(String.valueOf(car.getPrice()));
+        holder.binding.tvCarPrice.setText(String.valueOf("$"+car.getPrice()+"/day"));
+        holder.binding.tvDiscount.setText(String.valueOf("Discount price "+ "$"+car.getDiscount()));
 
 
 

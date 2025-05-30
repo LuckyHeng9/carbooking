@@ -35,6 +35,8 @@ import java.util.List;
 public class CarDetailsActivity extends AppCompatActivity {
 
     private ActivityCarDetailBinding binding;
+    private AppCar selectedCar; // Store the loaded car
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,7 @@ public class CarDetailsActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     AppCar car = snapshot.getValue(AppCar.class);
                     if (car != null) {
+                        selectedCar = car; // Store for later use
                         binding.carName.setText(car.getName());
                         binding.carPrice.setText("$" + car.getPrice());
                         binding.carDescription.setText(car.getDescription());
@@ -111,12 +114,20 @@ public class CarDetailsActivity extends AppCompatActivity {
 
     private void btnBooking() {
         binding.btnBookNow.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PaymentActivity.class);
-            startActivity(intent);
-            Booking();
-            finish();
+            if (selectedCar != null) {
+                Intent intent = new Intent(this, PaymentActivity.class);
+                intent.putExtra("carName", selectedCar.getName());
+                intent.putExtra("carPrice", String.valueOf(selectedCar.getPrice()));
+                intent.putExtra("carDescription", selectedCar.getDescription());
+                intent.putExtra("carImage", selectedCar.getImage());
+                Booking();
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Car data not loaded yet", Toast.LENGTH_SHORT).show();
+            }
         });
     }
+
 
 
 

@@ -20,4 +20,12 @@
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/tv_discount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Discount"
+        android:inputType="numberDecimal"
+        />
 </LinearLayout>

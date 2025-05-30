@@ -1,5 +1,6 @@
 package com.example.carbooking.Adapter;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -31,7 +32,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         AppCar car = rentalHistoryList.get(position);
 
         holder.binding.tvCarModel.setText(car.getName());
-       // holder.binding.tvRentalDate.setText(car.getRentalDate());
+
+
+
+        String status = car.getStatus();
+        holder.binding.tvStatus.setText(status);
+
+        if ("Pending".equals(status)) {
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#FF9900")); // Orange
+        } else if ("Confirmed".equals(status)) {
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#4CAF50")); // Green
+        } else if ("Rejected".equals(status)) {
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#F44336")); // Red
+        } else {
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#9E9E9E")); // Gray for unknown statuses
+        }
+
+        // holder.binding.tvRentalDate.setText(car.getRentalDate());
         //holder.binding.tvCarPrice.setText(String.valueOf(car.getPrice()));
 
         Glide.with(holder.itemView.getContext())
@@ -39,6 +56,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 .centerCrop()
                 .into(holder.binding.imageCar);
         Log.d("history",car.getModel());
+        Log.d("history",car.getStatus());
     }
 
     @Override

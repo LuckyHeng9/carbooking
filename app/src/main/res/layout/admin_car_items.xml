@@ -37,10 +37,12 @@
         app:cardElevation="6dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="385dp"
-            android:layout_height="150dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:padding="12dp">
 
+
+            <!-- Car Image -->
 
             <ImageButton
                 android:id="@+id/dot"
@@ -48,12 +50,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/dots"
                 app:layout_constraintEnd_toEndOf="@+id/carModel"
-                app:layout_constraintHorizontal_bias="0.982"
+                app:layout_constraintHorizontal_bias="0.861"
                 app:layout_constraintStart_toStartOf="@+id/carPrice"
-                tools:layout_editor_absoluteY="-7dp" />
+                tools:layout_editor_absoluteY="-10dp" />
 
-
-            <!-- Car Image -->
             <ImageView
                 android:id="@+id/carImage"
                 android:layout_width="150dp"
@@ -68,19 +68,22 @@
             <!-- Car Price -->
             <TextView
                 android:id="@+id/carModel"
-                android:layout_width="209dp"
-                android:layout_height="30dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="28dp"
                 android:gravity="start"
                 android:text="Model XYZ"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingStart="15dp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@id/carImage"
-                app:layout_constraintTop_toTopOf="@id/carImage" />
+                app:layout_constraintTop_toTopOf="@id/carImage"
+                app:layout_constraintWidth_percent="0.6" />
+
 
             <!-- Availability -->
             <TextView
