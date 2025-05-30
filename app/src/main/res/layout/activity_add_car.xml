@@ -107,7 +107,7 @@
                 <EditText
                     android:id="@+id/car_description_edittext"
                     style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
-                    android:layout_width="332dp"
+                    android:layout_width="match_parent"
                     android:layout_height="74dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/border"
@@ -119,7 +119,7 @@
                 <EditText
                     android:id="@+id/car_price_edittext"
                     style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
-                    android:layout_width="341dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/border"

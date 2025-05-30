@@ -164,10 +164,13 @@ public class CarFragment extends Fragment {
         EditText modelEdit = dialogView.findViewById(R.id.editCarModel);
         EditText descEdit = dialogView.findViewById(R.id.editCarDescription);
         EditText priceEdit = dialogView.findViewById(R.id.editCarPrice);
+        EditText discount = dialogView.findViewById(R.id.tv_discount);
 
         modelEdit.setText(car.getModel());
         descEdit.setText(car.getDescription());
         priceEdit.setText(String.valueOf(car.getPrice()));  // Important to convert double to string here
+        discount.setText(String.valueOf(car.getDiscount()));
+
 
         builder.setTitle("Edit Car")
                 .setPositiveButton("Update", (dialog, which) -> {
@@ -176,7 +179,9 @@ public class CarFragment extends Fragment {
 
                     try {
                         double newPrice = Double.parseDouble(priceEdit.getText().toString());
+                        double discounPrice = Double.parseDouble(discount.getText().toString());
                         car.setPrice(newPrice);
+                        car.setDiscount(discounPrice);
                     } catch (NumberFormatException e) {
                         Toast.makeText(getContext(), "Invalid price format", Toast.LENGTH_SHORT).show();
                         adapter.notifyItemChanged(position);

@@ -131,7 +131,7 @@
         android:id="@+id/tvCheckout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1hr"
+        android:text="1 day"
         android:textSize="16sp"
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/tvCheckout"
@@ -151,7 +151,7 @@
         android:id="@+id/tvCheckout5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$18.75 / hr"
+        android:text="$18.75 /day"
         android:textSize="18sp"
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/tvCheckout3"
@@ -171,7 +171,7 @@
         android:id="@+id/tvCheckout7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+8hr"
+        android:text="1 day"
         android:textSize="18sp"
         android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/tvCheckout5"
@@ -188,7 +188,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/tvCheckout9"
+        android:id="@+id/tv_car_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$120"
@@ -202,14 +202,15 @@
         android:id="@+id/btnPayNow"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="24dp"
+        android:backgroundTint="#122A59"
         android:text="PAY NOW"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#122A59"
-        app:layout_constraintTop_toBottomOf="@id/tvCheckout9"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_car_price"
+        app:layout_constraintVertical_bias="0.887" />
 </androidx.constraintlayout.widget.ConstraintLayout>

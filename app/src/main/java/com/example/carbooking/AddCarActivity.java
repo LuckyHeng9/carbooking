@@ -115,6 +115,7 @@ public class AddCarActivity extends AppCompatActivity {
                 name,
                 model,
                 price,
+                00,
                 description,
                 null,          // carstatus (null = pending / not rented yet)
                 true,          // available = true by default

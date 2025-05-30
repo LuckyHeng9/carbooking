@@ -130,7 +130,8 @@ public class ProfileFragment extends Fragment {
                        // car.setRentedDate(rentedDate); // Add rental date
                         rentalHistoryList.add(car);
                         historyAdapter.setHistoryList(rentalHistoryList);
-                        Log.d("history",car.getModel());
+                        Log.d("history3",car.getModel());
+                        Log.d("history3",car.getStatus());
                     }
                 }
             }
