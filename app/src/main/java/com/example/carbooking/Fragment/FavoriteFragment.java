@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FavoriteFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private CarAdapter carAdapter;
-    private List<AppCar> carList;
-
-    private boolean isLoading = false;
 
     @Nullable
     @Override
@@ -45,16 +43,12 @@ public class FavoriteFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_favorites);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<AppCar> carList = new ArrayList<>();
-
-        carAdapter = new CarAdapter(); // No-argument constructor
-        carAdapter.setCars(carList);
+        carAdapter = new CarAdapter();
         recyclerView.setAdapter(carAdapter);
 
         loadFavoriteCars();
         return view;
     }
-
 
     private void loadFavoriteCars() {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -74,15 +68,19 @@ public class FavoriteFragment extends Fragment {
                     }
 
                     if (!favoriteCarIds.isEmpty()) {
+                        // Update adapter with favorite IDs for red heart
+                        Set<String> favoriteIdSet = new HashSet<>(favoriteCarIds);
+                        carAdapter.setFavoriteCarIds(favoriteIdSet);
                         loadCarsByIds(favoriteCarIds);
                     } else {
-                        carAdapter.setCars(new ArrayList<>()); // Clear list
+                        carAdapter.setCars(new ArrayList<>());
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Failed to load favorites", Toast.LENGTH_SHORT).show();
                 });
     }
+
     private void loadCarsByIds(List<String> carIds) {
         DatabaseReference carRef = FirebaseDatabase.getInstance().getReference("cars");
 
@@ -96,14 +94,9 @@ public class FavoriteFragment extends Fragment {
                         favoriteCars.add(car);
                     }
                 }
+
                 carAdapter.setCars(favoriteCars);
-                Log.d("FavoriteFragment", "Found " + snapshot + " favorites.");
-                Log.d("FavoriteFragment", "Checking car ID: " + carIds);
-
-
             }
-
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -111,8 +104,4 @@ public class FavoriteFragment extends Fragment {
             }
         });
     }
-
-
-
-
 }

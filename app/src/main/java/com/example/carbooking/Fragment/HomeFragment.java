@@ -1,7 +1,6 @@
 package com.example.carbooking.Fragment;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,11 +20,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 public class HomeFragment extends Fragment {
     FragmentHomeBinding binding;
@@ -35,18 +36,13 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private CarAdapter carAdapter;
 
-
-
     public HomeFragment() {
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -68,9 +64,10 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        binding.rcListCars.setAdapter(carAdapter);
+
         return binding.getRoot();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -87,6 +84,29 @@ public class HomeFragment extends Fragment {
     private void loadTasks(boolean reset) {
         isLoading = true;
         showProgressBar();
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance().collection("users")
+                .document(uid)
+                .collection("favoriteCar")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    Set<String> favoriteIds = new HashSet<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        String id = doc.getString("carId");
+                        if (id != null) favoriteIds.add(id);
+                    }
+                    carAdapter.setFavoriteCarIds(favoriteIds);
+                    loadCarData(reset);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error loading favorites", Toast.LENGTH_SHORT).show();
+                    loadCarData(reset);
+                });
+    }
+
+    private void loadCarData(boolean reset) {
         DatabaseReference carRef = FirebaseDatabase.getInstance().getReference("cars");
 
         carRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -96,14 +116,13 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot carSnap : snapshot.getChildren()) {
                     AppCar car = carSnap.getValue(AppCar.class);
 
-                    // Only add cars that are marked as available
                     if (car != null && Boolean.TRUE.equals(car.getAvailable())) {
                         carList.add(car);
                     }
                 }
 
                 if (reset) {
-                    carAdapter.setCars(carList);  // Replace data
+                    carAdapter.setCars(carList);
                 } else {
                     List<AppCar> uniqueCars = new ArrayList<>();
                     for (AppCar car : carList) {
@@ -137,7 +156,6 @@ public class HomeFragment extends Fragment {
             }
         }
     }
-
 
 
     private void showProgressBar() {
